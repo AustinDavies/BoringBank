@@ -12,7 +12,7 @@
                 Account Overview
               </v-card-title>
               <v-card-text>
-                <v-subtitle>Current Balance: ${{ formattedBalance }}</v-subtitle>
+                <v-subtitle>Current Balance: ${{ formattedAccountBalance }}</v-subtitle>
                 <v-divider class="mt-3" />
               </v-card-text>
             </v-flex>
@@ -21,25 +21,10 @@
                       v-if="hasTransactions">
                 <v-subheader>Recent Transactions</v-subheader>
                 <template v-for="(transaction, index) in orderedTransactions">
-
                   <v-divider v-if="index >= 1 || (index + 1) < transactions.length"
-                             :key="transaction.transactionId"></v-divider>
-
-                  <v-list-item :key="transaction.transactionId">
-                    <v-list-item-icon>
-                      <v-icon>{{ getTransactionIcon(transaction) }}</v-icon>
-                    </v-list-item-icon>
-
-                    <v-list-item-content>
-                      <v-list-item-title>{{ formatTransactionTimestamp(transaction) }}</v-list-item-title>
-                      <v-list-item-subtitle>Made a {{getTransactionTypeAsName(transaction)}}</v-list-item-subtitle>
-                    </v-list-item-content>
-
-                    <v-list-item-action-text>
-                      <v-list-item-title>{{ formatTransactionAmount(transaction) }}</v-list-item-title>
-                      <v-list-item-subtitle>{{formatTransactionResultingBalance(transaction)}}</v-list-item-subtitle>
-                    </v-list-item-action-text>
-                  </v-list-item>
+                             :key="`${transaction.transactionId}-divider`"></v-divider>
+                  <transaction-list-item :key="transaction.transactionId"
+                                         :transaction="transaction" />
                 </template>
               </v-list>
               <v-layout fill-height
@@ -75,15 +60,14 @@ import { RootGetters, RootActions } from '~/store/index';
 import {
   TransactionLookupViewModel,
   TransactionType
-} from '../.types/api/boringbank-api';
-import moment from 'moment';
+} from '~/.types/api/boringbank-api';
 import _ from 'lodash';
 
 @Component({
   layout: 'authenticated',
   components: {
-    'vuetify-logo': () => import('~/components/VuetifyLogo.vue'),
-    logo: () => import('~/components/Logo.vue')
+    'transaction-list-item': () =>
+      import('~/components/list-items/TransactionListItem.vue')
   }
 })
 export default class extends Vue {
@@ -109,6 +93,9 @@ export default class extends Vue {
   /**
    * Computed
    */
+  get formattedAccountBalance() {
+    return this.balance.toFixed(2);
+  }
   get orderedTransactions() {
     if (!this.hasTransactions) return null;
     return _.orderBy(this.transactions, x => x.timestamp, 'desc');
@@ -116,40 +103,9 @@ export default class extends Vue {
   get hasTransactions() {
     return this.transactions != null && this.transactions.length > 0;
   }
-
-  get formattedBalance() {
-    return this.balance.toFixed(2);
-  }
   /**
    * Methods
    */
-  formatTransactionTimestamp(transaction: TransactionLookupViewModel) {
-    if (transaction == null) return null;
-    return moment(transaction.timestamp)
-      .local()
-      .format('MM/DD/YYYY');
-  }
-  getTransactionTypeAsName(transaction: TransactionLookupViewModel) {
-    if (transaction == null) return null;
-    return TransactionType[transaction.type];
-  }
-  formatTransactionResultingBalance(transaction: TransactionLookupViewModel) {
-    if (transaction == null) return '0.00';
-    return transaction.resultingBalance.toFixed(2);
-  }
-  formatTransactionAmount(transaction: TransactionLookupViewModel) {
-    if (transaction == null) return '0.00';
-    let formattedAmount = transaction.amount.toFixed(2);
-    if (transaction.type === TransactionType.Withdrawal)
-      formattedAmount = `-${formattedAmount}`;
-    return formattedAmount;
-  }
-  getTransactionIcon(transaction: TransactionLookupViewModel) {
-    if (transaction == null) return '';
-    if (transaction.type === TransactionType.Deposit)
-      return 'mdi-bank-transfer-in';
-    else return 'mdi-bank-transfer-out';
-  }
 
   /**
    * Lifecycle Hooks

@@ -1,0 +1,14 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint-config-standard"],
+  "rules": {
+    "import-spacing": true,
+    "semicolon": [true, "always"],
+    "no-bitwise": false,
+    "import-blacklist": [true, "rxjs"],
+    "interface-name": [false],
+    "object-literal-sort-keys": false,
+    "space-before-function-paren": false,
+    "indent": [false, "spaces", 4]
+  }
+}

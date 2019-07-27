@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["es2015", "dom", "dom"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "noImplicitAny": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitThis": false,
+    "noImplicitReturns": true,
+    "strictNullChecks": false,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "importHelpers": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./*"],
+      "@/*": ["./*"]
+    },
+    "esModuleInterop": true,
+    "strict": true,
+    "noEmit": true,
+    "types": [
+      "@types/node", 
+      "@nuxt/vue-app",
+      "@nuxtjs/vuetify"
+    ]
+  },
+  "include": ["**/*.ts", "**/*.vue", ".types/**/*.ts"],
+  "exclude": [".nuxt", "dist", "node_modules"],
+  "compileOnSave": false
+}

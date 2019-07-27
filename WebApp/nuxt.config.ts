@@ -48,7 +48,8 @@ const config: NuxtConfiguration = {
   plugins: [
     '~/plugins/axios.ts',
     '~/plugins/vee-validate.ts',
-    '~/plugins/boringbank-api.ts'
+    '~/plugins/boringbank-api.ts',
+    '~/filters/USD.ts'
   ],
   /*
    ** Nuxt.js modules

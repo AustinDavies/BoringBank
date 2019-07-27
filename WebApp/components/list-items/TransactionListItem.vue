@@ -10,8 +10,9 @@
     </v-list-item-content>
 
     <v-list-item-action-text>
-      <v-list-item-title>{{ formattedTransactionAmount }}</v-list-item-title>
-      <v-list-item-subtitle>{{ formattedTransactionResultingBalance }}</v-list-item-subtitle>
+      <v-list-item-title v-if="isWithdrawal">-{{ transactionAmount | usd }}</v-list-item-title>
+      <v-list-item-title v-else>{{ transactionAmount | usd }}</v-list-item-title>
+      <v-list-item-subtitle>{{ transactionResultingBalance | usd }}</v-list-item-subtitle>
     </v-list-item-action-text>
   </v-list-item>
 </template>
@@ -56,22 +57,21 @@ export default class extends Vue {
     else return 'mdi-bank-transfer-out';
   }
 
-  get formattedTransactionResultingBalance() {
+  get transactionResultingBalance() {
     if (this.transaction == null) return '??.??';
-    let formattedAmount = this.formatNumberAsUSD(
-      this.transaction.resultingBalance
-    );
-    if (this.transaction.resultingBalance < 0)
-      formattedAmount = `-${formattedAmount}`;
-    return formattedAmount;
+    return this.transaction.resultingBalance;
   }
 
-  get formattedTransactionAmount() {
+  get transactionAmount() {
     if (this.transaction == null) return '??.??';
-    let formattedAmount = this.formatNumberAsUSD(this.transaction.amount);
-    if (this.transaction.type === TransactionType.Withdrawal)
-      formattedAmount = `-${formattedAmount}`;
-    return formattedAmount;
+    return this.transaction.amount;
+  }
+
+  get isWithdrawal() {
+    return (
+      this.transaction != null &&
+      this.transaction.type === TransactionType.Withdrawal
+    );
   }
 
   get transactionId() {

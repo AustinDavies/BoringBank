@@ -12,7 +12,7 @@
                 Account Overview
               </v-card-title>
               <v-card-text>
-                <v-subtitle>Current Balance: ${{ formattedAccountBalance }}</v-subtitle>
+                <v-subtitle>Current Balance: {{ balance | usd }}</v-subtitle>
                 <v-divider class="mt-3" />
               </v-card-text>
             </v-flex>
@@ -93,9 +93,6 @@ export default class extends Vue {
   /**
    * Computed
    */
-  get formattedAccountBalance() {
-    return this.balance.toFixed(2);
-  }
   get orderedTransactions() {
     if (!this.hasTransactions) return null;
     return _.orderBy(this.transactions, x => x.timestamp, 'desc');

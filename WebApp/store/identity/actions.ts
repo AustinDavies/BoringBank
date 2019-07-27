@@ -16,16 +16,25 @@ import {
 } from '~/.types/api/boringbank-api';
 import { sessionStorageSessionKey } from '~/package.json';
 
+const setSession = (payload: SetUserActionPayload) => {
+  window.sessionStorage.setItem(
+    sessionStorageSessionKey,
+    JSON.stringify(payload)
+  );
+};
+
 export const actions: ActionTree<IdentityState, RootState> = {
   async [Actions.CreateUserWithUsernameAndPassword.Name](
     { dispatch },
     command: CreateUserCommand
   ) {
     let response = await this.$api.users.createUser(command);
-    dispatch(Actions.SetUser.Name, <SetUserActionPayload>{
+    const setUserPayload: SetUserActionPayload = {
       accessToken: response.accessToken,
       username: command.username
-    });
+    };
+    if (process.client && !!window) setSession(setUserPayload);
+    dispatch(Actions.SetUser.Name, setUserPayload);
     return response;
   },
 
@@ -43,11 +52,7 @@ export const actions: ActionTree<IdentityState, RootState> = {
         accessToken: response.accessToken,
         username: command.username
       };
-      if (process.client && !!window)
-        window.sessionStorage.setItem(
-          sessionStorageSessionKey,
-          JSON.stringify(setUserPayload)
-        );
+      if (process.client && !!window) setSession(setUserPayload);
       dispatch(Actions.SetUser.Name, <SetUserActionPayload>{});
     } catch (error) {
       dispatch(IdentityActions.Logout.Name);

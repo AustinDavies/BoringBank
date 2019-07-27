@@ -12,7 +12,7 @@
                 Make a Deposit
               </v-card-title>
               <v-card-text>
-                <v-subtitle>Current Balance: ${{ formattedBalance }}</v-subtitle>
+                <v-subtitle>Current Balance: {{ balance | usd }}</v-subtitle>
                 <v-divider class="mt-3" />
                 <v-layout style="margin-top:5rem;"
                           justify-center>
@@ -144,10 +144,6 @@ export default class extends Vue {
   /**
    * Computed
    */
-  get formattedBalance() {
-    if (this.balance == null) return '0.00';
-    return this.balance.toFixed(2);
-  }
   /**
    * Methods
    */

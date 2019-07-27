@@ -161,9 +161,9 @@ export default class extends Vue {
   async onSignUpWithUsernameAndPassword() {
     if (this.isLoading) return;
     try {
-      this.isLoading = true;
       let isValid = await this.$validator.validateAll();
       if (!isValid) return;
+      this.isLoading = true;
       await this.createUserWithUsernameAndPassword(
         new CreateUserCommand({
           username: this.username,

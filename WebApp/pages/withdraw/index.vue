@@ -19,8 +19,9 @@
                   <v-flex xs12
                           sm6>
                     <v-text-field autofocus
+                                  :min="0"
                                   data-vv-name="amount"
-                                  v-validate="'required'"
+                                  v-validate="'required|min_value:0|numeric'"
                                   :error-messages="errors.collect('amount')"
                                   label="Amount"
                                   required

@@ -178,5 +178,9 @@ export default class extends Vue {
   /**
    * Lifecycle Hooks
    */
+  async fetch({ store }) {
+    await store.dispatch(RootActions.GetTransactions.Name);
+    await store.dispatch(RootActions.GetBalance.Name);
+  }
 }
 </script>
